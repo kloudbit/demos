@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kloudbit/demos/issues"
   },
-  "homepage": "https://github.com/kloudbit/demos#readme"
+  "homepage": "https://github.com/kloudbit/demos#readme",
+  "dependencies": {
+    "express": "4.14.0"
+  }
 }
