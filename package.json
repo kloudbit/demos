@@ -1,0 +1,19 @@
+{
+  "name": "demos",
+  "version": "1.0.0",
+  "description": "kloudbit demo apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kloudbit/demos.git"
+  },
+  "author": "Chris Hickey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kloudbit/demos/issues"
+  },
+  "homepage": "https://github.com/kloudbit/demos#readme"
+}
