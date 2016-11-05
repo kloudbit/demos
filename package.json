@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/kloudbit/demos#readme",
   "dependencies": {
-    "express": "4.14.0"
+    "dotenv": "2.0.0",
+    "express": "4.14.0",
+    "unirest": "0.5.1",
+    "vue": "2.0.3"
   }
 }

@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/vue@2.0.3/dist/vue.js"></script>
+        <!--<script src="https://unpkg.com/vue-router@2.0.1"></script>-->
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+
+    <body>
+
+        <style type="text/css">
+
+        </style>
+
+        <div class="container">
+            <h1>Kloudbit - Todo Demo</h1>
+            <h3>Demo TODO List</h3>
+        </div>
+
+
+        <div id="app"></div>
+
+    </body>
+
+    <script>
+
+
+        var myApp = {};
+        myApp.http = function(url,method,data,headers,success,error){
+            $.ajax({url:url, method:method, data:data, headers:headers, success:success, error:error});
+        };
+
+        const NotFound = { template: "<p>Page not found</p>" }
+        const Home = {
+            template: "<div class='container'>
+                            <h5>Create a User</h5>
+                            <form>
+                                <input type='email' v-model='username' class='form-control' placeholder='email address' required>
+                                <input type='password' v-model='password' class='form-control' placeholder='password' required>
+                                <button class='btn btn-primary' v-on:click='add_user'>create user</button>
+                            </form>
+                        </div>",
+            data: function(){
+                return {username:null};
+            },
+            methods: {
+                add_user: function(e){
+                    e.preventDefault();
+
+                    var url = "http://app.kloudbit.com/1.0/users";
+                    var method = "POST";
+                    var data = {"username":this.username, "password":this.password};
+                    var headers = {"content-type":"application/json"};
+                    var success = function(data){
+                        console.log(data);
+                        alert("success");
+                    };
+
+                    var error = function(data){
+                        console.log(data);
+                        alert("error");
+                    };
+
+                    console.log({url:url, method:method, data:data, headers:headers, success:success, error:error});
+
+                    $.ajax({url:"/api/create_user", method:"post", data:JSON.stringify(data), headers:headers});
+                    //alert(this.username);
+                    //window.location = "/about";
+                }
+            }
+        }
+        const About = { template: '<p>about page</p>' }
+        const routes = {
+          '/': Home,
+          '/about': About
+        }
+        new Vue({
+          el: '#app',
+          data: {
+            currentRoute: window.location.pathname
+          },
+          computed: {
+            ViewComponent () {
+              return routes[this.currentRoute] || NotFound
+            }
+          },
+          render (h) { return h(this.ViewComponent) }
+        })
+
+    </script>
+
+
+</html>
