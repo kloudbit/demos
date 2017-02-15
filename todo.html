@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Compressed CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/css/foundation.min.css">
+
+        <!-- Compressed JavaScript -->
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/js/foundation.min.js"></script>
+
+        <script src="http://lib.kloudbit.com/kloudbit.js"></script>
+
+    </head>
+
+    <body>
+
+        <style type="text/css">
+            #list,#alert {display:none;}
+            .checked {text-decoration: line-through;color:#999;}
+        </style>
+
+        <div class="row">
+            <div class="small-12 column">
+                <h2>Kloudbit Demos - Todo App</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 medium-4 column">
+                <div id="account">
+                    <input type="email" placeholder="email address" id="txtEmail">
+                    <input type="password" placeholder="password" id="txtPassword">
+                    <div class="callout alert" id="alert" data-closable></div>
+                    <button type="button" class="button small" id="create">Save</button>
+                </div>
+
+                <div id="list">
+                    <!--<ul id="todos"></ul>-->
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th><th>Completed</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="todos"></tbody>
+                    </table>
+
+                    <input type="text" placeholder="enter item" id="txtItem">
+                    <button type="button" class="button small" id="save">Add Item</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                kloudbit.init('6fcb377de918cb38722f23937103d32e');
+
+                var add_items_to_list = function(todos){
+                    $('#todos').empty();
+
+                    for(var i=0; i < todos.length; i++){
+                        var checked = (todos[i].content.completed) ? 'checked' : '';
+
+                        var html = "<tr><td><span class='todo-item "+checked+"' data-rel='"+todos[i].content._id+"'>"+todos[i].content.item+"</span></td><td><input type='checkbox' class='chkStatus' data-rel='"+todos[i].content._id+"' "+checked+"></td></tr>";
+                        $('#todos').prepend(html);
+                    }
+                };
+
+                var load_list = function(){
+                    kloudbit.uri('todos').get(function(response){
+                        console.log('loading list');
+                        console.log(response);
+
+                        add_items_to_list(response.result);
+                    });
+                };
+
+                $('tbody').on('change', function(event){
+                    var todo_id = $(event.target).attr('data-rel');
+                    var completed = $(event.target).prop('checked');
+
+                    var item = $('.todo-item[data-rel="'+todo_id+'"]').html();
+
+                    console.log(completed);
+
+                    kloudbit.uri('todos/'+todo_id).update({item:item, completed:completed}, function(response){
+                        console.log('update complete');
+                        console.log(response);
+
+                        if(response.result.content.completed == true){
+                            $('.todo-item[data-rel="'+todo_id+'"]').addClass('checked');
+                        }else{
+                            $('.todo-item[data-rel="'+todo_id+'"]').removeClass('checked');
+                        }
+                    });
+
+                });
+
+                $('#save').on('click', function(){
+                    if( $('#txtItem').val().length > 0 ){
+                        var item = $('#txtItem').val();
+
+                        kloudbit.uri('todos').add({item:item}, function(response){
+                            console.log('added item');
+                            console.log(response);
+
+                            load_list();
+                            $('#txtItem').val('');
+                        });
+                    }
+                });
+
+                $('#create').on('click', function(){
+                    if( $('#txtEmail').val().length > 0 ){
+
+                        var username = $('#txtEmail').val();
+                        var password = $('#txtPassword').val();
+
+                        kloudbit.uri('users').add({username:username, password:password}, function(response){
+                            console.log('add complete');
+                            console.log(response);
+
+                            console.log(kloudbit.is_logged_in());
+
+                            if(response.error_code){
+                                $('#alert').html(response.error_message).show();
+                            }else if(kloudbit.is_logged_in()){
+                                $('#account').hide();
+                                $('#list').show();
+                            }
+                        });
+                    }
+                });
+            });
+
+        </script>
+
+    </body>
+
+</html>
