@@ -52,7 +52,9 @@
 
         <script>
             $(document).ready(function(){
-                kloudbit.init('6fcb377de918cb38722f23937103d32e'); // Replace with your Limited Access Kloudbit Token
+                // Initialize Kloubit JS Library
+                var limited_kloudbit_access_token = '6fcb377de918cb38722f23937103d32e'; // replace with your kloudbit token
+                kloudbit.init(limited_kloudbit_access_token);
 
                 var add_items_to_list = function(todos){
                     $('#todos').empty();
@@ -66,6 +68,8 @@
                 };
 
                 var load_list = function(){
+
+                    // get all todo items
                     kloudbit.uri('todos').get(function(response){
                         add_items_to_list(response.result);
                     });
@@ -76,6 +80,7 @@
                     var completed = $(event.target).prop('checked');
                     var item = $('.todo-item[data-rel="'+todo_id+'"]').html();
 
+                    // update todo item
                     kloudbit.uri('todos/'+todo_id).update({item:item, completed:completed}, function(response){
                         if(response.result.content.completed == true){
                             $('.todo-item[data-rel="'+todo_id+'"]').addClass('checked');
@@ -90,6 +95,7 @@
                     if( $('#txtItem').val().length > 0 ){
                         var item = $('#txtItem').val();
 
+                        // add a todo item
                         kloudbit.uri('todos').add({item:item}, function(response){
                             load_list();
                             $('#txtItem').val('');
@@ -103,6 +109,7 @@
                         var username = $('#txtEmail').val();
                         var password = $('#txtPassword').val();
 
+                        // add a user to the todo app
                         kloudbit.uri('users').add({username:username, password:password}, function(response){
                             if(response.error_code){
                                 $('#alert').html(response.error_message).show();
