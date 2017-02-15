@@ -39,15 +39,8 @@
                 </div>
 
                 <div id="list">
-                    <!--<ul id="todos"></ul>-->
-
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th><th>Completed</th>
-                            </tr>
-                        </thead>
-
+                        <thead><tr><th>Item</th><th>Completed</th></tr></thead>
                         <tbody id="todos"></tbody>
                     </table>
 
@@ -59,7 +52,7 @@
 
         <script>
             $(document).ready(function(){
-                kloudbit.init('6fcb377de918cb38722f23937103d32e');
+                kloudbit.init('6fcb377de918cb38722f23937103d32e'); // Replace with your Limited Access Kloudbit Token
 
                 var add_items_to_list = function(todos){
                     $('#todos').empty();
@@ -74,9 +67,6 @@
 
                 var load_list = function(){
                     kloudbit.uri('todos').get(function(response){
-                        console.log('loading list');
-                        console.log(response);
-
                         add_items_to_list(response.result);
                     });
                 };
@@ -84,15 +74,9 @@
                 $('tbody').on('change', function(event){
                     var todo_id = $(event.target).attr('data-rel');
                     var completed = $(event.target).prop('checked');
-
                     var item = $('.todo-item[data-rel="'+todo_id+'"]').html();
 
-                    console.log(completed);
-
                     kloudbit.uri('todos/'+todo_id).update({item:item, completed:completed}, function(response){
-                        console.log('update complete');
-                        console.log(response);
-
                         if(response.result.content.completed == true){
                             $('.todo-item[data-rel="'+todo_id+'"]').addClass('checked');
                         }else{
@@ -107,9 +91,6 @@
                         var item = $('#txtItem').val();
 
                         kloudbit.uri('todos').add({item:item}, function(response){
-                            console.log('added item');
-                            console.log(response);
-
                             load_list();
                             $('#txtItem').val('');
                         });
@@ -123,11 +104,6 @@
                         var password = $('#txtPassword').val();
 
                         kloudbit.uri('users').add({username:username, password:password}, function(response){
-                            console.log('add complete');
-                            console.log(response);
-
-                            console.log(kloudbit.is_logged_in());
-
                             if(response.error_code){
                                 $('#alert').html(response.error_message).show();
                             }else if(kloudbit.is_logged_in()){
