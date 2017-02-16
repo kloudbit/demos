@@ -71,7 +71,9 @@
 
                     // get all todo items
                     kloudbit.uri('todos').get(function(response){
-                        add_items_to_list(response.result);
+                        console.log(response);
+
+                        add_items_to_list(response.result.collection);
                     });
                 };
 
