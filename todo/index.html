@@ -61,12 +61,12 @@
                         html += "<td><input type='checkbox' class='chkStatus' data-rel='"+todos[i].content._id+"' "+checked+"></td>";
                         html += "<td><a href='#' data-rel='"+todos[i].content._id+"'>delete</a></td>";
                         html += "</tr>";
+
                         $('#todos').prepend(html);
                     }
                 };
 
                 var load_list = function(){
-
                     // get all todo items
                     kloudbit.uri('todos').get(function(response){
                         console.log(response);
@@ -77,7 +77,6 @@
                 $('tbody').on('change', function(event){
                     var todo_id = $(event.target).attr('data-rel');
                     var completed = $(event.target).prop('checked');
-
                     var item = $('.todo-item[data-rel="'+todo_id+'"]').html();
 
                     kloudbit.uri('todos/'+todo_id).update({item:item, completed:completed}, function(response){
@@ -92,8 +91,8 @@
 
                 $('tbody').on('click', function(event){
                     var todo_id = $(event.target).attr('data-rel');
-                    if(event.target.tagName.toLowerCase() == 'a'){
 
+                    if(event.target.tagName.toLowerCase() == 'a'){
                         kloudbit.uri('todos/'+todo_id).remove(function(response){
                             console.log(response);
                             load_list();
